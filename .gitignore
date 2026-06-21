@@ -1,0 +1,23 @@
+# Build output
+build/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.sln
+*.vcxproj
+*.vcxproj.filters
+
+# CMake generated
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+CTestTestfile.cmake
+
+# Audio samples (not redistributable)
+audio/*.ogg
+
+# OS
+Thumbs.db
+.DS_Store
