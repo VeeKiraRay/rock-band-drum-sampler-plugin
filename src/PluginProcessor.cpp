@@ -92,6 +92,7 @@ void RBDrumSamplerAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer,
             int target = -1;  // -1 = drop
             switch (msg.getNoteNumber())
             {
+                case 95: target = 95;  break;  // Kick 2 (double pedal)
                 case 96: target = 96;  break;  // Kick
                 case 97: target = 97;  break;  // Snare
                 case 98:
@@ -131,7 +132,7 @@ void RBDrumSamplerAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer,
         else if (msg.isNoteOff())
         {
             int rbNote = msg.getNoteNumber();
-            if (rbNote >= 96 && rbNote <= 112)
+            if (rbNote == 95 || (rbNote >= 96 && rbNote <= 112))
             {
                 int t = activeTarget[rbNote];
                 if (t >= 0)
@@ -186,14 +187,15 @@ void RBDrumSamplerAudioProcessor::loadSamples()
 
     static const SampleEntry entries[] = {
         { BinaryData::Kick1_ogg,     BinaryData::Kick1_oggSize,     0 },
-        { BinaryData::Snare1_ogg,    BinaryData::Snare1_oggSize,    1 },
-        { BinaryData::HhClosed_ogg,  BinaryData::HhClosed_oggSize,  2 },
-        { BinaryData::Ride1_ogg,     BinaryData::Ride1_oggSize,     3 },
-        { BinaryData::Crsh1_ogg,     BinaryData::Crsh1_oggSize,     4 },
-        { BinaryData::Crsh2_ogg,     BinaryData::Crsh2_oggSize,     5 },
-        { BinaryData::HiMidTom_ogg,  BinaryData::HiMidTom_oggSize,  6 },
-        { BinaryData::LoMidTom_ogg,  BinaryData::LoMidTom_oggSize,  7 },
-        { BinaryData::LowFlrTom_ogg, BinaryData::LowFlrTom_oggSize, 8 },
+        { BinaryData::Kick2_ogg,     BinaryData::Kick2_oggSize,     1 },
+        { BinaryData::Snare1_ogg,    BinaryData::Snare1_oggSize,    2 },
+        { BinaryData::HhClosed_ogg,  BinaryData::HhClosed_oggSize,  3 },
+        { BinaryData::Ride1_ogg,     BinaryData::Ride1_oggSize,     4 },
+        { BinaryData::Crsh1_ogg,     BinaryData::Crsh1_oggSize,     5 },
+        { BinaryData::Crsh2_ogg,     BinaryData::Crsh2_oggSize,     6 },
+        { BinaryData::HiMidTom_ogg,  BinaryData::HiMidTom_oggSize,  7 },
+        { BinaryData::LoMidTom_ogg,  BinaryData::LoMidTom_oggSize,  8 },
+        { BinaryData::LowFlrTom_ogg, BinaryData::LowFlrTom_oggSize, 9 },
     };
 
     for (auto& e : entries)

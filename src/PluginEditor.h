@@ -13,14 +13,14 @@ public:
 private:
     RBDrumSamplerAudioProcessor& audioProcessor;
 
-    std::array<juce::Slider, 9> volSliders;
-    std::array<juce::Slider, 9> atkSliders;
-    std::array<juce::Slider, 9> relSliders;
-    std::array<juce::Label,  9> drumLabels;
+    std::array<juce::Slider, 10> volSliders;
+    std::array<juce::Slider, 10> atkSliders;
+    std::array<juce::Slider, 10> relSliders;
+    std::array<juce::Label,  10> drumLabels;
 
     juce::Label volRowLabel, atkRowLabel, relRowLabel;
 
-    std::array<std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>, 27> attachments;
+    std::array<std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>, 30> attachments;
 
     juce::TextButton muteButton, resetButton;
 

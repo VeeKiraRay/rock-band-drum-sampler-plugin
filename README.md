@@ -52,7 +52,7 @@ REAPER is the primary DAW for Rock Band charting. The workflow is the same as ab
 
 ## Controls
 
-Each of the nine drums (Kick, Snare, Hi-Hat, Ride, Crash 1, Crash 2, Hi Tom, Mid Tom, Floor Tom) has three sliders:
+Each of the ten drums (Kick, Kick 2, Snare, Hi-Hat, Ride, Crash 1, Crash 2, Hi Tom, Mid Tom, Floor Tom) has three sliders:
 
 | Slider | Range | Default | What it does |
 | ------- | ----- | ------- | ------------ |
@@ -75,6 +75,7 @@ The plugin understands the standard Rock Band `PART DRUMS` note numbers. These c
 
 | RB note | Default sound     | Overridden by                        |
 | ------- | ----------------- | ------------------------------------ |
+| 95      | Kick 2 (double pedal) | —                              |
 | 96      | Kick              | —                                    |
 | 97      | Snare             | —                                    |
 | 98      | Hi-hat (closed)   | Tom marker 110 → Yellow Tom; Y+G combo → Crash 2 |
@@ -105,6 +106,7 @@ Nine OGG files must be placed in the `audio/` directory **before** configuring C
 | File             | Triggered by                        |
 | ---------------- | ----------------------------------- |
 | `Kick1.ogg`      | MIDI 96 (kick)                      |
+| `Kick2.ogg`      | MIDI 95 (double-pedal kick)         |
 | `Snare1.ogg`     | MIDI 97 (snare)                     |
 | `HhClosed.ogg`   | MIDI 98 — default (hi-hat)          |
 | `Ride1.ogg`      | MIDI 99 — default (blue cymbal)     |

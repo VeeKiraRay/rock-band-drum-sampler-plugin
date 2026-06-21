@@ -10,7 +10,7 @@ namespace
     constexpr int kRowH      = kSliderH + kTextBoxH;  // 106
     constexpr int kRowGap    = 8;
     constexpr int kHeader    = 26;
-    constexpr int kEditorW      = kLabelCol + kColWidth * 9;  // 712
+    constexpr int kEditorW      = kLabelCol + kColWidth * 10;  // 785
     constexpr int kButtonRowH   = 52;   // 12px top pad + 32px button + 8px bottom pad
     constexpr int kEditorH      = kHeader + 3 * kRowH + 2 * kRowGap + kButtonRowH;  // 412
 
@@ -52,7 +52,7 @@ RBDrumSamplerAudioProcessorEditor::RBDrumSamplerAudioProcessorEditor(
     addAndMakeVisible(atkRowLabel);
     addAndMakeVisible(relRowLabel);
 
-    for (int i = 0; i < 9; ++i)
+    for (int i = 0; i < 10; ++i)
     {
         juce::String prefix = kDrums[i].prefix;
 
@@ -117,32 +117,32 @@ void RBDrumSamplerAudioProcessorEditor::paint(juce::Graphics& g)
     g.fillAll(juce::Colour(0xff1a1a2e));
 
     g.setColour(juce::Colour(0xff2a2a4e));
-    for (int i = 0; i < 9; ++i)
+    for (int i = 0; i < 10; ++i)
         g.drawVerticalLine(kLabelCol + i * kColWidth, 0.0f, (float)getHeight());
 }
 
 void RBDrumSamplerAudioProcessorEditor::resized()
 {
     // Header row: drum name labels
-    for (int i = 0; i < 9; ++i)
+    for (int i = 0; i < 10; ++i)
         drumLabels[i].setBounds(kLabelCol + i * kColWidth, 0, kColWidth, kHeader);
 
     // Row 0: Volume
     int rowY = kHeader;
     volRowLabel.setBounds(0, rowY, kLabelCol - 4, kRowH);
-    for (int i = 0; i < 9; ++i)
+    for (int i = 0; i < 10; ++i)
         volSliders[i].setBounds(kLabelCol + i * kColWidth, rowY, kColWidth, kRowH);
 
     // Row 1: Attack
     rowY += kRowH + kRowGap;
     atkRowLabel.setBounds(0, rowY, kLabelCol - 4, kRowH);
-    for (int i = 0; i < 9; ++i)
+    for (int i = 0; i < 10; ++i)
         atkSliders[i].setBounds(kLabelCol + i * kColWidth, rowY, kColWidth, kRowH);
 
     // Row 2: Release
     rowY += kRowH + kRowGap;
     relRowLabel.setBounds(0, rowY, kLabelCol - 4, kRowH);
-    for (int i = 0; i < 9; ++i)
+    for (int i = 0; i < 10; ++i)
         relSliders[i].setBounds(kLabelCol + i * kColWidth, rowY, kColWidth, kRowH);
 
     // Button row

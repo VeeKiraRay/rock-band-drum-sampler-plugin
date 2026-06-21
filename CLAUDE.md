@@ -32,6 +32,7 @@ The plugin embeds OGG files at build time via `juce_add_binary_data`. All nine s
 | File | Triggered by |
 |------|-------------|
 | `Kick1.ogg` | MIDI 96 |
+| `Kick2.ogg` | MIDI 95 (double-pedal kick) |
 | `Snare1.ogg` | MIDI 97 |
 | `HhClosed.ogg` | MIDI 98 (hi-hat default) |
 | `Ride1.ogg` | MIDI 99 (blue cymbal default) |
@@ -53,6 +54,7 @@ The core logic is in `processBlock`. Rock Band sends drums on a fixed note schem
 
 | RB note | Normal target | Condition → alternate target |
 |---------|---------------|------------------------------|
+| 95 | 95 (Kick 2) | — |
 | 96 | 96 (Kick) | — |
 | 97 | 97 (Snare) | — |
 | 98 | 98 (Hi-hat) | marker 110 present → 110 (Yellow Tom); Y+G combo → 101 (Crash 2) |
@@ -74,7 +76,7 @@ Called from `prepareToPlay`. Each OGG file is pulled from the embedded `BinaryDa
 
 ### Editor (`src/PluginEditor.cpp`)
 
-Full UI with per-drum controls for all nine channels (Kick, Snare, Hi-Hat, Ride, Crash 1, Crash 2, Hi Tom, Mid Tom, Floor Tom). Each channel has three sliders:
+Full UI with per-drum controls for all ten channels (Kick, Kick 2, Snare, Hi-Hat, Ride, Crash 1, Crash 2, Hi Tom, Mid Tom, Floor Tom). Each channel has three sliders:
 
 - **Volume** (0.0–2.0, default 1.0)
 - **Attack** (0–500 ms, default ~1 ms)

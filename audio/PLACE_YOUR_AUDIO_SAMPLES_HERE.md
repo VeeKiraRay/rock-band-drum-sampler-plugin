@@ -5,6 +5,7 @@ Place the following OGG files in this folder before building:
 | File | Drum hit |
 |------|----------|
 | `Kick1.ogg` | Bass drum |
+| `Kick2.ogg` | Bass drum 2 (double pedal) |
 | `Snare1.ogg` | Snare drum |
 | `HhClosed.ogg` | Closed hi-hat |
 | `Ride1.ogg` | Ride cymbal |

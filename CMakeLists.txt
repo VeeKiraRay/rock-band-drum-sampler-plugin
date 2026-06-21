@@ -30,6 +30,7 @@ juce_add_binary_data(RBDrumSamplerData
     NAMESPACE BinaryData
     SOURCES
         ./audio/Kick1.ogg
+        ./audio/Kick2.ogg
         ./audio/Snare1.ogg
         ./audio/HhClosed.ogg
         ./audio/Ride1.ogg

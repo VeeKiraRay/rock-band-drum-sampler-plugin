@@ -9,8 +9,9 @@ struct DrumChannel
     float       defaultRelease;
 };
 
-static constexpr std::array<DrumChannel, 9> kDrums = {{
+static constexpr std::array<DrumChannel, 10> kDrums = {{
     { "kick",     "Kick (O)",      96,  0.40f },
+    { "kick2",    "Kick 2 (O2)",   95,  0.40f },
     { "snare",    "Snare (R)",     97,  0.30f },
     { "hihat",    "Hi-Hat (Y)",    98,  0.30f },
     { "ride",     "Ride (B)",      99,  1.00f },
@@ -57,7 +58,7 @@ public:
 private:
     juce::AudioFormatManager formatManager;
     juce::Synthesiser         sampler;
-    std::array<juce::SamplerSound*, 9> sounds {};
+    std::array<juce::SamplerSound*, 10> sounds {};
     std::array<int, 128> activeTarget {};  // RB note → internal target (-1 = none active)
 
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
