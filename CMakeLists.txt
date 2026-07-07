@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.22)
 project(RBDrumSampler VERSION 0.1.0)
 
+option(RBDS_BUILD_TESTS "Build unit tests" ON)
+
 include(cmake/CPM.cmake)
 
 CPMAddPackage(
@@ -8,6 +10,14 @@ CPMAddPackage(
     GIT_REPOSITORY https://github.com/juce-framework/JUCE.git
     GIT_TAG 7.0.12
 )
+
+if(RBDS_BUILD_TESTS)
+    CPMAddPackage(
+        NAME Catch2
+        GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+        GIT_TAG v3.5.4
+    )
+endif()
 
 juce_add_plugin(RBDrumSampler
     PLUGIN_MANUFACTURER_CODE Vkry
@@ -69,3 +79,34 @@ target_link_libraries(RBDrumSampler
         juce::juce_recommended_lto_flags
         juce::juce_recommended_warning_flags
 )
+
+if(RBDS_BUILD_TESTS)
+    juce_add_console_app(RBDrumSamplerTests PRODUCT_NAME "RBDrumSamplerTests")
+    juce_generate_juce_header(RBDrumSamplerTests)
+
+    target_sources(RBDrumSamplerTests PRIVATE
+        src/PluginProcessor.cpp
+        src/PluginEditor.cpp
+        tests/TestMain.cpp
+        tests/MidiRemapTests.cpp
+        tests/AudioSmokeTests.cpp
+        tests/StateTests.cpp)
+
+    target_compile_definitions(RBDrumSamplerTests
+        PRIVATE
+            JUCE_WEB_BROWSER=0
+            JUCE_USE_CURL=0
+            JUCE_VST3_CAN_REPLACE_VST2=0
+            JucePlugin_Name="Rock Band Drum Sampler")
+
+    target_link_libraries(RBDrumSamplerTests
+        PRIVATE
+            RBDrumSamplerData
+            Catch2::Catch2
+            juce::juce_audio_processors
+            juce::juce_audio_formats
+            juce::juce_audio_utils
+        PUBLIC
+            juce::juce_recommended_config_flags
+            juce::juce_recommended_warning_flags)
+endif()

@@ -23,7 +23,25 @@ cmake --build build --config Debug
 
 The compiled VST3 lands in `build/RBDrumSampler_artefacts/`. No install step is wired up; copy the `.vst3` bundle manually to your DAW's plugin folder.
 
-There are no automated tests.
+## Testing
+
+`RBDS_BUILD_TESTS` (default `ON`) adds a Catch2 unit-test console app, `RBDrumSamplerTests`, covering the MIDI remap logic (`tests/MidiRemapTests.cpp`), audio-level sample triggering (`tests/AudioSmokeTests.cpp`), and parameter/state persistence (`tests/StateTests.cpp`).
+
+```powershell
+cmake -B build
+cmake --build build --config Debug --target RBDrumSamplerTests
+& "build/RBDrumSamplerTests_artefacts/Debug/RBDrumSamplerTests.exe"
+```
+
+A few cases are tagged `[!mayfail]` — they document known bugs (see CODE_REVIEW.md) as a
+regression baseline rather than asserting the buggy behavior is correct. Catch2 reports
+these as "failed but ok" and they don't fail the exe's exit code; a passing run means
+everything *except* the tagged cases is green.
+
+`scripts/run_pluginval.ps1` runs Tracktion's pluginval validator (strictness level 5)
+against the built Debug VST3, downloading the tool to `build/tools/` on first use.
+
+**Any deliberate change to the RB remap behavior (`remapMidi` in `PluginProcessor.cpp`) must update `tests/MidiRemapTests.cpp` in the same commit.**
 
 ## Audio Samples
 
@@ -46,7 +64,10 @@ The plugin embeds OGG files at build time via `juce_add_binary_data`. All nine s
 
 ### MIDI Remapping (`src/PluginProcessor.cpp`)
 
-The core logic is in `processBlock`. Rock Band sends drums on a fixed note scheme; the processor remaps those to the internal sample trigger notes in two passes:
+The core logic lives in `remapMidi(in, out)`, called from `processBlock` (public, so tests
+can drive it directly without going through audio rendering). Rock Band sends drums on a
+fixed note scheme; the processor remaps those to the internal sample trigger notes in two
+passes:
 
 **Pass 1** — scan the block to detect which RB notes are present (needed for combo detection).
 
@@ -64,7 +85,7 @@ The core logic is in `processBlock`. Rock Band sends drums on a fixed note schem
 
 **Y+G combo**: both notes 98 and 100 arrive in the same block **without** tom markers 110 or 112 — this signals a double-crash hit and routes 98 → Crash 2 (101) instead of hi-hat.
 
-**Note-offs are intentionally dropped** for all RB drum pitches (96–112). RB PART DRUMS note-offs arrive almost immediately after note-ons (~0.05 s), which would choke the sample. Voices are left to decay naturally.
+**Note-offs are forwarded, not dropped.** Each RB note-on records its remapped target in `activeTarget[rbNote]`. When the matching RB note-off arrives (pitch 95 or 96–112), the remap looks up that target, emits a note-off for it, and clears the slot; note-offs for pitches with no active mapping are silently dropped. Non-RB note-offs pass through unchanged.
 
 ### Sample Loading (`loadSamples`)
 

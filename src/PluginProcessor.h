@@ -33,6 +33,10 @@ public:
     bool isBusesLayoutSupported(const BusesLayout& layouts) const override;
     void processBlock(juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
 
+    // Remaps RB drum MIDI to internal sampler notes (tom markers, Y+G combo,
+    // note-off tracking, velocity scaling). Public so tests can drive it directly.
+    void remapMidi(const juce::MidiBuffer& in, juce::MidiBuffer& out);
+
     juce::AudioProcessorEditor* createEditor() override;
     bool hasEditor() const override { return true; }
 

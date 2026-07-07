@@ -73,9 +73,19 @@ void RBDrumSamplerAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer,
         }
     }
 
+    juce::MidiBuffer remapped;
+    remapMidi(midiMessages, remapped);
+
+    sampler.renderNextBlock(buffer, remapped, 0, buffer.getNumSamples());
+}
+
+void RBDrumSamplerAudioProcessor::remapMidi(const juce::MidiBuffer& in, juce::MidiBuffer& out)
+{
+    out.clear();
+
     // First pass: record which RB pitches are present this block
     bool has[128] = {};
-    for (auto meta : midiMessages)
+    for (auto meta : in)
         if (meta.getMessage().isNoteOn())
             has[meta.getMessage().getNoteNumber()] = true;
 
@@ -83,8 +93,7 @@ void RBDrumSamplerAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer,
     const bool yg_combo = has[98] && has[100] && !has[110] && !has[112];
 
     // Second pass: remap RB pitches to internal sampler notes
-    juce::MidiBuffer remapped;
-    for (auto meta : midiMessages)
+    for (auto meta : in)
     {
         auto msg = meta.getMessage();
         if (msg.isNoteOn())
@@ -124,7 +133,7 @@ void RBDrumSamplerAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer,
                     : 1.0f;
                 int scaledVel = juce::jlimit(1, 127, (int)(msg.getVelocity() * gain));
 
-                remapped.addEvent(
+                out.addEvent(
                     juce::MidiMessage::noteOn(msg.getChannel(), target, (juce::uint8)scaledVel),
                     meta.samplePosition);
             }
@@ -137,7 +146,7 @@ void RBDrumSamplerAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer,
                 int t = activeTarget[rbNote];
                 if (t >= 0)
                 {
-                    remapped.addEvent(
+                    out.addEvent(
                         juce::MidiMessage::noteOff(msg.getChannel(), t),
                         meta.samplePosition);
                     activeTarget[rbNote] = -1;
@@ -145,16 +154,14 @@ void RBDrumSamplerAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer,
             }
             else
             {
-                remapped.addEvent(msg, meta.samplePosition);
+                out.addEvent(msg, meta.samplePosition);
             }
         }
         else
         {
-            remapped.addEvent(msg, meta.samplePosition);
+            out.addEvent(msg, meta.samplePosition);
         }
     }
-
-    sampler.renderNextBlock(buffer, remapped, 0, buffer.getNumSamples());
 }
 
 juce::AudioProcessorEditor* RBDrumSamplerAudioProcessor::createEditor()
